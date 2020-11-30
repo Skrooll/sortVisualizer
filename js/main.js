@@ -40,7 +40,7 @@ const sorts = {
 				sorts.stupidSort.i=0;
 				sorts.stupidSort.n++;
 			}
-			for (var j=0; j<sorts.stupidSort.n; j++) {
+			for (var j=0; j<sorts.stupidSort.n-1; j++) {
 				colors[m.length-1-j] = 'lime';
 			}
 			return colors;
@@ -64,7 +64,7 @@ function main() {
 	
 	last_name.oninput = function () {
 		clearInterval(timer);
-		n = parseInt(last_name.value);
+		n = parseInt(last_name.value)+1;
 		array = randomArray(n);
 		colors = colorsArray(n);
 		currentSort.reset();
@@ -83,6 +83,7 @@ function main() {
 			dropdown.innerHTML = elem.innerHTML;
 			array = randomArray(n);
 			colors = colorsArray(n);
+			currentSort.reset();
 			for (const [key, sort] of Object.entries(sorts)){
 				if (sort.title===elem.innerHTML)
 					currentSort = sort;	
