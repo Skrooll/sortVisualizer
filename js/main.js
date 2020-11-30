@@ -14,7 +14,8 @@ const sorts = {
 			shuffle(m);
 			return colors;
 		},
-		description: "Bless RNG."
+		description: "Bless RNG.",
+		reset: ()=>{},
 	},
 	stupidSort: {
 		title: "Stupid sort",
@@ -46,15 +47,33 @@ const sorts = {
 		},
 		i: 0,
 		n: 0,
+		reset: ()=>{
+			sorts.stupidSort.i=0;
+			sorts.stupidSort.n=0;
+		}
 	}
 }
 
 function main() {
-	let n = 7;
+	let n = 20;
 	let currentSort = sorts.stupidSort;
 	let array = randomArray(n);
+	let timer;
 	let colors = colorsArray(n);
 	update();
+	
+	last_name.oninput = function () {
+		clearInterval(timer);
+		n = parseInt(last_name.value);
+		array = randomArray(n);
+		colors = colorsArray(n);
+		currentSort.reset();
+		timer = setInterval(()=>{
+			draw();
+			colors = currentSort.step(array, colors);
+		}, 1000/n);
+	}
+	
 	for (const [key, sort] of Object.entries(sorts)) {
 		dropdown1.innerHTML+=`<li><span class="black-text chooseSort">${sort.title}</span></li>`;
 	}
@@ -74,7 +93,7 @@ function main() {
 	let w = c.width;
 	let h = c.height;
 	
-	setInterval(()=>{
+	timer = setInterval(()=>{
 		draw();
 		colors = currentSort.step(array, colors);
 	}, 1000/n);
