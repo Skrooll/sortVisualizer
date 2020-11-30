@@ -40,7 +40,7 @@ const sorts = {
 				sorts.stupidSort.i=0;
 				sorts.stupidSort.n++;
 			}
-			for (var j=0; j<sorts.stupidSort.n-1; j++) {
+			for (var j=0; j<sorts.stupidSort.n; j++) {
 				colors[m.length-1-j] = 'lime';
 			}
 			return colors;
