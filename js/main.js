@@ -118,8 +118,8 @@ function main() {
 	let n = 20;
 	let currentSort = sorts.bubleSort;
 	theory.innerHTML = currentSort.description;
-	//let array = randomArray(n);
-	let array = range(1, n).reverse();
+	let array = randomArray(n);
+	//let array = range(1, n).reverse();
 	let timer;
 	let colors = colorsArray(n);
 	update();
@@ -127,8 +127,8 @@ function main() {
 	last_name.oninput = function () {
 		clearInterval(timer);
 		n = parseInt(last_name.value)+1;
-		//array = randomArray(n);
-		array = range(1, n).reverse();
+		array = randomArray(n);
+		//array = range(1, n).reverse();
 		colors = colorsArray(n);
 		currentSort.reset();
 		timer = setInterval(()=>{
@@ -144,14 +144,14 @@ function main() {
 	for (let elem of list){
 		elem.onclick = ()=>{
 			dropdown.innerHTML = elem.innerHTML;
-			//array = randomArray(n);
-			array = range(1, n).reverse();
+			array = randomArray(n);
+			//array = range(1, n).reverse();
 			colors = colorsArray(n);
 			currentSort.reset();
 			for (const [key, sort] of Object.entries(sorts)){
 				if (sort.title===elem.innerHTML)
 					currentSort = sort;	
-					theory.innerHTML = sort.description;
+					theory.innerHTML = currentSort.description;
 			}
 		}
 	}
