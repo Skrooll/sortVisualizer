@@ -17,30 +17,30 @@ const sorts = {
 		description: "Bless RNG.",
 		reset: ()=>{},
 	},
-	stupidSort: {
-		title: "Stupid sort",
+	bubleSort: {
+		title: "Buble sort",
 		sort: (m)=>{
 			let result = [1];
 			return result;
 		},
-		description: "",
+		description: "Bubble sort, sometimes referred to as sinking sort, is a simple sorting algorithm that repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order. The pass through the list is repeated until the list is sorted. The algorithm, which is a comparison sort, is named for the way smaller or larger elements \"bubble\" to the top of the list.",
 		step: (m, colors)=>{
 			if (check(m)){
 				return colorsArray(m.length, 'lime');
 			}
-			let i=sorts.stupidSort.i;
+			let i=sorts.bubleSort.i;
 			colors = colorsArray(m.length);
 			colors[i] = 'yellow';
 			colors[i+1] = 'yellow';
 			if (m[i]>m[i+1]){
 				[m[i], m[i+1]] = [m[i+1], m[i]];
 			}
-			sorts.stupidSort.i++;
-			if (sorts.stupidSort.i==m.length-sorts.stupidSort.n) {
-				sorts.stupidSort.i=0;
-				sorts.stupidSort.n++;
+			sorts.bubleSort.i++;
+			if (sorts.bubleSort.i==m.length-sorts.bubleSort.n) {
+				sorts.bubleSort.i=0;
+				sorts.bubleSort.n++;
 			}
-			for (var j=0; j<sorts.stupidSort.n; j++) {
+			for (var j=0; j<sorts.bubleSort.n; j++) {
 				colors[m.length-1-j] = 'lime';
 			}
 			return colors;
@@ -48,16 +48,78 @@ const sorts = {
 		i: 0,
 		n: 0,
 		reset: ()=>{
-			sorts.stupidSort.i=0;
-			sorts.stupidSort.n=0;
+			sorts.bubleSort.i=0;
+			sorts.bubleSort.n=0;
+		}
+	},
+	shakerSort: {
+		title: "Shaker sort",
+		step: (m, colors)=>{
+			if (check(m))
+				return colorsArray(m.length, 'lime');
+			let i=sorts.shakerSort.i;
+			if (sorts.shakerSort.forward) {
+				let i=sorts.shakerSort.i;
+				colors = colorsArray(m.length);
+				colors[i] = 'yellow';
+				colors[i+1] = 'yellow';
+				if (m[i]>m[i+1]){
+					[m[i], m[i+1]] = [m[i+1], m[i]];
+				}
+				sorts.shakerSort.i++;
+				if (sorts.shakerSort.i==m.length-Math.round(sorts.shakerSort.n/2)) {
+					sorts.shakerSort.n++;
+					sorts.shakerSort.forward = false;
+				}
+				for (let j=0; j<Math.round(sorts.shakerSort.n/2); j++) {
+					colors[m.length-1-j] = 'lime';
+				}
+				for (let j=0; j<sorts.shakerSort.n-Math.round(sorts.shakerSort.n/2); j++) {
+					colors[j] = 'lime';
+				}
+				return colors;
+			}
+			else {
+				let i=sorts.shakerSort.i;
+				colors = colorsArray(m.length);
+				colors[i] = 'yellow';
+				colors[i-1] = 'yellow';
+				if (m[i]<m[i-1]){
+					[m[i], m[i-1]] = [m[i-1], m[i]];
+				}
+				sorts.shakerSort.i--;
+				if (sorts.shakerSort.i==sorts.shakerSort.n-Math.round(sorts.shakerSort.n/2)) {
+					sorts.shakerSort.n++;
+					sorts.shakerSort.forward = true;
+					
+				}
+				for (let j=0; j<Math.round(sorts.shakerSort.n/2); j++) {
+					colors[m.length-1-j] = 'lime';
+				}
+				for (let j=0; j<sorts.shakerSort.n-Math.round(sorts.shakerSort.n/2); j++) {
+					colors[j] = 'lime';
+				}
+				return colors;
+			}
+		},
+		forward: true,
+		i: 0,
+		n: 0,
+		reset: ()=>{
+			sorts.shakerSort.i = 0;
+			sorts.shakerSort.n = 0;
+			sorts.shakerSort.forward = true;
 		}
 	}
 }
 
 function main() {
+	M.AutoInit();
 	let n = 20;
-	let currentSort = sorts.stupidSort;
-	let array = randomArray(n);
+	let currentSort = sorts.bubleSort;
+	theory.innerHTML = currentSort.description;
+	//let array = randomArray(n);
+	let array = range(1, n).reverse();
 	let timer;
 	let colors = colorsArray(n);
 	update();
@@ -65,7 +127,8 @@ function main() {
 	last_name.oninput = function () {
 		clearInterval(timer);
 		n = parseInt(last_name.value)+1;
-		array = randomArray(n);
+		//array = randomArray(n);
+		array = range(1, n).reverse();
 		colors = colorsArray(n);
 		currentSort.reset();
 		timer = setInterval(()=>{
@@ -81,12 +144,14 @@ function main() {
 	for (let elem of list){
 		elem.onclick = ()=>{
 			dropdown.innerHTML = elem.innerHTML;
-			array = randomArray(n);
+			//array = randomArray(n);
+			array = range(1, n).reverse();
 			colors = colorsArray(n);
 			currentSort.reset();
 			for (const [key, sort] of Object.entries(sorts)){
 				if (sort.title===elem.innerHTML)
 					currentSort = sort;	
+					theory.innerHTML = sort.description;
 			}
 		}
 	}
